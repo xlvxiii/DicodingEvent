@@ -1,4 +1,5 @@
 [versions]
+activityKtx = "1.9.2"
 agp = "8.6.1"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
@@ -10,10 +11,11 @@ material = "1.12.0"
 constraintlayout = "2.1.4"
 lifecycleLivedataKtx = "2.8.6"
 lifecycleViewmodelKtx = "2.8.6"
-navigationFragmentKtx = "2.8.1"
-navigationUiKtx = "2.8.1"
+navigationFragmentKtx = "2.8.2"
+navigationUiKtx = "2.8.2"
 
 [libraries]
+androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
