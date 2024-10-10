@@ -1,4 +1,4 @@
-package com.example.dicodingevent.ui.home
+package com.example.dicodingevent.ui.finished_event
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -11,7 +11,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class HomeViewModel : ViewModel() {
+class FinishedEventViewModel : ViewModel() {
 
     private val _listEvent = MutableLiveData<List<ListEventsItem?>?>()
     val listEvent: LiveData<List<ListEventsItem?>?> = _listEvent
@@ -20,16 +20,16 @@ class HomeViewModel : ViewModel() {
     val isLoading: LiveData<Boolean> = _isLoading
 
     companion object {
-        private const val TAG = "HomeViewModel"
+        private const val TAG = "FinishedEventViewModel"
     }
 
     init {
-        fetchEvents()
+        fetchFinishedEvents()
     }
 
-    private fun fetchEvents() {
+    private fun fetchFinishedEvents() {
         _isLoading.value = true
-        val client = ApiConfig.getApiService().getEvents("1")
+        val client = ApiConfig.getApiService().getEvents("0")
         client.enqueue(object : Callback<EventResponse> {
             override fun onResponse(call: Call<EventResponse>, response: Response<EventResponse>) {
                 _isLoading.value = false
@@ -46,5 +46,4 @@ class HomeViewModel : ViewModel() {
             }
         })
     }
-
 }

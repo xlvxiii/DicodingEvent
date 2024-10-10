@@ -12,8 +12,14 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
+        android:id="@+id/navigation_active_event"
+        android:name="com.example.dicodingevent.ui.active_event.ActiveEventFragment"
+        android:label="@string/title_active_event"
+        tools:layout="@layout/fragment_active_event" />
+
+    <fragment
         android:id="@+id/navigation_finished_event"
-        android:name="com.example.dicodingevent.ui.finished.FinishedEventFragment"
+        android:name="com.example.dicodingevent.ui.finished_event.FinishedEventFragment"
         android:label="@string/title_finished_event"
         tools:layout="@layout/fragment_finished_event" />
 

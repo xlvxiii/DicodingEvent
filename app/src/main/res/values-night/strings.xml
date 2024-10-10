@@ -4,4 +4,6 @@
     <string name="bot_finished_event">Finished</string>
     <string name="event_name">Event Name</string>
     <string name="summary">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</string>
+    <string name="title_active_event">Upcoming Event</string>
+    <string name="img_desc_event_image">Event Image</string>
 </resources>
