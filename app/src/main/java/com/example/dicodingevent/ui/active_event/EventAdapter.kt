@@ -1,4 +1,4 @@
-package com.example.dicodingevent.ui.home
+package com.example.dicodingevent.ui.active_event
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,11 +7,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.dicodingevent.data.response.ListEventsItem
-import com.example.dicodingevent.databinding.ItemEventHomeBinding
+import com.example.dicodingevent.databinding.ItemEventBinding
 
 class EventAdapter : ListAdapter<ListEventsItem, EventAdapter.MyViewHolder>(DIFF_CALLBACK) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val binding = ItemEventHomeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemEventBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MyViewHolder(binding)
     }
 
@@ -20,10 +20,10 @@ class EventAdapter : ListAdapter<ListEventsItem, EventAdapter.MyViewHolder>(DIFF
         holder.bind(event)
     }
 
-    class MyViewHolder(private val binding: ItemEventHomeBinding) : RecyclerView.ViewHolder(binding.root) {
+    class MyViewHolder(private val binding: ItemEventBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(event: ListEventsItem) {
             binding.tvEventName.text = event.name
-//            binding.tvSummary.text = event.summary
+            binding.tvSummary.text = event.summary
             Glide.with(binding.root.context).load(event.imageLogo).into(binding.imgEventPhoto)
         }
     }
