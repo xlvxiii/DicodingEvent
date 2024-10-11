@@ -28,13 +28,22 @@ class HomeFragment : Fragment() {
         val root: View = binding.root
 
         binding.rvEvent.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
+        binding.rvFinishedEvent.layoutManager = LinearLayoutManager(requireActivity())
 
         homeViewModel.listEvent.observe(viewLifecycleOwner) { eventList ->
             setEventData(eventList)
         }
 
+        homeViewModel.listFinishedEvent.observe(viewLifecycleOwner) { finishedEventList ->
+            setFinishedEventData(finishedEventList)
+        }
+
         homeViewModel.isLoading.observe(viewLifecycleOwner) {
             showLoading(it)
+        }
+
+        homeViewModel.isLoading2.observe(viewLifecycleOwner) {
+            showLoading2(it)
         }
         return root
     }
@@ -52,9 +61,23 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun showLoading2(isLoading2: Boolean) {
+        if (isLoading2) {
+            binding.progressBar2.visibility = View.VISIBLE
+        } else {
+            binding.progressBar2.visibility = View.GONE
+        }
+    }
+
     private fun setEventData(eventList: List<ListEventsItem?>?) {
         val adapter = EventAdapter()
         adapter.submitList(eventList)
         binding.rvEvent.adapter = adapter
+    }
+
+    private fun setFinishedEventData(eventList: List<ListEventsItem?>?) {
+        val adapter = FinishedEventAdapter()
+        adapter.submitList(eventList)
+        binding.rvFinishedEvent.adapter = adapter
     }
 }

@@ -3,7 +3,7 @@
     <string name="title_home">Dicoding Event</string>
     <string name="title_finished_event">Finished Event</string>
     <string name="bot_home">Home</string>
-    <string name="bot_active_event">Aktif</string>
+    <string name="bot_active_event">Upcoming</string>
     <string name="bot_finished_event">Finished</string>
     <string name="event_name">Event Name</string>
     <string name="summary">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</string>
