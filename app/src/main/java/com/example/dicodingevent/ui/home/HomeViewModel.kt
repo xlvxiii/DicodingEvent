@@ -26,7 +26,7 @@ class HomeViewModel : ViewModel() {
     val isLoading2: LiveData<Boolean> = _isLoading2
 
     companion object {
-        private const val TAG = "HomeViewModel"
+        const val TAG = "HomeViewModel"
     }
 
     init {

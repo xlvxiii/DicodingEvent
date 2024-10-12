@@ -15,6 +15,18 @@ data class EventResponse(
 	val message: String? = null
 )
 
+data class EventDetailResponse(
+
+	@field:SerializedName("error")
+	val error: Boolean? = null,
+
+	@field:SerializedName("message")
+	val message: String? = null,
+
+	@field:SerializedName("event")
+	val event: EventDetailItem? = null
+)
+
 data class ListEventsItem(
 
 	@field:SerializedName("summary")
@@ -23,8 +35,23 @@ data class ListEventsItem(
 	@field:SerializedName("mediaCover")
 	val mediaCover: String? = null,
 
-	@field:SerializedName("registrants")
-	val registrants: Int? = null,
+	@field:SerializedName("imageLogo")
+	val imageLogo: String? = null,
+
+	@field:SerializedName("name")
+	val name: String? = null,
+
+	@field:SerializedName("id")
+	val id: Int? = null,
+)
+
+data class EventDetailItem(
+
+	@field:SerializedName("summary")
+	val summary: String? = null,
+
+	@field:SerializedName("mediaCover")
+	val mediaCover: String? = null,
 
 	@field:SerializedName("imageLogo")
 	val imageLogo: String? = null,
@@ -38,9 +65,6 @@ data class ListEventsItem(
 	@field:SerializedName("ownerName")
 	val ownerName: String? = null,
 
-	@field:SerializedName("cityName")
-	val cityName: String? = null,
-
 	@field:SerializedName("quota")
 	val quota: Int? = null,
 
@@ -52,10 +76,4 @@ data class ListEventsItem(
 
 	@field:SerializedName("beginTime")
 	val beginTime: String? = null,
-
-	@field:SerializedName("endTime")
-	val endTime: String? = null,
-
-	@field:SerializedName("category")
-	val category: String? = null
 )

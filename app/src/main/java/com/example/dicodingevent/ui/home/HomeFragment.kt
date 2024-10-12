@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dicodingevent.data.response.ListEventsItem
 import com.example.dicodingevent.databinding.FragmentHomeBinding
@@ -27,6 +28,12 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         binding.rvEvent.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
         binding.rvFinishedEvent.layoutManager = LinearLayoutManager(requireActivity())
 
@@ -45,7 +52,7 @@ class HomeFragment : Fragment() {
         homeViewModel.isLoading2.observe(viewLifecycleOwner) {
             showLoading2(it)
         }
-        return root
+
     }
 
     override fun onDestroyView() {
@@ -73,11 +80,28 @@ class HomeFragment : Fragment() {
         val adapter = EventAdapter()
         adapter.submitList(eventList)
         binding.rvEvent.adapter = adapter
+
+        adapter.setOnItemClickCallback(object : EventAdapter.OnItemClickCallback {
+            override fun onItemClicked(data: ListEventsItem) {
+                showSelectedEventItem(data)
+            }
+        })
     }
 
     private fun setFinishedEventData(eventList: List<ListEventsItem?>?) {
         val adapter = FinishedEventAdapter()
         adapter.submitList(eventList)
         binding.rvFinishedEvent.adapter = adapter
+
+        adapter.setOnItemClickCallback(object : FinishedEventAdapter.OnItemClickCallback {
+            override fun onItemClicked(data: ListEventsItem) {
+                showSelectedEventItem(data)
+            }
+        })
+    }
+
+    private fun showSelectedEventItem(event: ListEventsItem) {
+        val toEventDetailActivity = HomeFragmentDirections.actionNavigationHomeToEventDetailActivity(event.id!!)
+        findNavController().navigate(toEventDetailActivity)
     }
 }

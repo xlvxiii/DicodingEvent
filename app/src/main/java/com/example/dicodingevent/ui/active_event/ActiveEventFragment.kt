@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dicodingevent.data.response.ListEventsItem
 import com.example.dicodingevent.databinding.FragmentActiveEventBinding
@@ -24,6 +25,12 @@ class ActiveEventFragment : Fragment() {
         _binding = FragmentActiveEventBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         binding.rvEvent.layoutManager = LinearLayoutManager(requireActivity())
 
         eventViewModel.listEvent.observe(viewLifecycleOwner) { eventList ->
@@ -33,7 +40,6 @@ class ActiveEventFragment : Fragment() {
         eventViewModel.isLoading.observe(viewLifecycleOwner) {
             showLoading(it)
         }
-        return root
     }
 
     override fun onDestroyView() {
@@ -53,6 +59,17 @@ class ActiveEventFragment : Fragment() {
         val adapter = EventAdapter()
         adapter.submitList(eventList)
         binding.rvEvent.adapter = adapter
+
+        adapter.setOnItemClickCallback(object : EventAdapter.OnItemClickCallback {
+            override fun onItemClicked(data: ListEventsItem) {
+                showSelectedEventItem(data)
+            }
+        })
+    }
+
+    private fun showSelectedEventItem(event: ListEventsItem) {
+        val toEventDetailActivity = ActiveEventFragmentDirections.actionNavigationActiveEventToEventDetailActivity(event.id!!)
+        findNavController().navigate(toEventDetailActivity)
     }
 
 }

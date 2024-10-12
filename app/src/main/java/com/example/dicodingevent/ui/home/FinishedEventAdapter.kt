@@ -10,6 +10,9 @@ import com.example.dicodingevent.data.response.ListEventsItem
 import com.example.dicodingevent.databinding.ItemFinishedEventHomeBinding
 
 class FinishedEventAdapter : ListAdapter<ListEventsItem, FinishedEventAdapter.MyViewHolder>(DIFF_CALLBACK) {
+
+    private lateinit var onItemClickCallback: OnItemClickCallback
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val binding = ItemFinishedEventHomeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MyViewHolder(binding)
@@ -18,6 +21,10 @@ class FinishedEventAdapter : ListAdapter<ListEventsItem, FinishedEventAdapter.My
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val event = getItem(position)
         holder.bind(event)
+
+        holder.itemView.setOnClickListener {
+            onItemClickCallback.onItemClicked(event)
+        }
     }
 
     class MyViewHolder(private val binding: ItemFinishedEventHomeBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -28,7 +35,13 @@ class FinishedEventAdapter : ListAdapter<ListEventsItem, FinishedEventAdapter.My
         }
     }
 
+    fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
+        this.onItemClickCallback = onItemClickCallback
+    }
 
+    interface OnItemClickCallback {
+        fun onItemClicked(data: ListEventsItem)
+    }
 
     companion object {
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ListEventsItem>() {

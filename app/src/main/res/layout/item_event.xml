@@ -20,9 +20,9 @@
         <ImageView
             android:id="@+id/img_event_photo"
             android:layout_width="match_parent"
-            android:layout_height="128dp"
+            android:layout_height="wrap_content"
             android:contentDescription="@string/img_desc_event_image"
-            android:scaleType="centerCrop"
+            android:scaleType="fitXY"
             card_view:layout_constraintBottom_toTopOf="@id/tv_event_name"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"

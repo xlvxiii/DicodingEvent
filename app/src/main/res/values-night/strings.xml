@@ -6,4 +6,9 @@
     <string name="summary">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</string>
     <string name="title_active_event">Upcoming Event</string>
     <string name="img_desc_event_image">Event Image</string>
+    <string name="title_event_owner">Penyelenggara</string>
+    <string name="title_date">Waktu</string>
+    <string name="title_kuota">Sisa Kuota</string>
+    <string name="title_event_detail">Event Detail</string>
+    <string name="btn_register">Register</string>
 </resources>
