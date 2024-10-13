@@ -29,7 +29,6 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-//        activity?.actionBar?.hide()
 //        hide action bar
 //        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -49,7 +48,7 @@ class HomeFragment : Fragment() {
             searchView.setupWithSearchBar(searchBar)
             searchView
                 .editText
-                .setOnEditorActionListener { textView, actionId, event ->
+                .setOnEditorActionListener { _, _, _ ->
                     searchBar.setText(searchView.text)
 
                     homeViewModel.fetchSearchResult(searchView.text.toString())

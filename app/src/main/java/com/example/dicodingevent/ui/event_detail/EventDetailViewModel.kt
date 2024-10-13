@@ -11,7 +11,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class EventDetailViewModel() : ViewModel() {
+class EventDetailViewModel : ViewModel() {
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
@@ -25,10 +25,6 @@ class EventDetailViewModel() : ViewModel() {
     companion object{
         const val TAG = "EventDetailViewModel"
     }
-
-//    fun setId(eventId: Int?) {
-//        _eventId.value = eventId
-//    }
     
     fun fetchEventDetail(eventId: Int) {
         _isLoading.value = true

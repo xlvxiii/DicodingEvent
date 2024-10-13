@@ -15,7 +15,7 @@ class FailDialogFragment : DialogFragment() {
         return requireActivity().let {
             val builder = AlertDialog.Builder(it)
             builder.setMessage("Failed to load data")
-                .setNegativeButton("Close") { dialog, id ->
+                .setNegativeButton("Close") { _, _ ->
                     // User cancelled the dialog.
                     dismiss()
                 }
