@@ -14,11 +14,12 @@ import androidx.navigation.navArgs
 import com.bumptech.glide.Glide
 import com.example.dicodingevent.R
 import com.example.dicodingevent.databinding.ActivityEventDetailBinding
+import com.example.dicodingevent.ui.FailDialogFragment
 
 class EventDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEventDetailBinding
-    val args: EventDetailActivityArgs by navArgs()
+    private val args: EventDetailActivityArgs by navArgs()
     private val eventDetailViewModel: EventDetailViewModel by viewModels<EventDetailViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,6 +53,9 @@ class EventDetailActivity : AppCompatActivity() {
             showLoading(it)
         }
 
+        eventDetailViewModel.isLoadSuccess.observe(this) {
+            showDialog(it)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -71,6 +75,12 @@ class EventDetailActivity : AppCompatActivity() {
         binding.btnRegister.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             startActivity(intent)
+        }
+    }
+
+    private fun showDialog(isLoadSuccess: Boolean) {
+        if (!isLoadSuccess) {
+            FailDialogFragment().show(supportFragmentManager, "FailDialogFragment")
         }
     }
 

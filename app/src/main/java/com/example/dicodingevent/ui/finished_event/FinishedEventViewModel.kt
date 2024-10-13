@@ -19,6 +19,9 @@ class FinishedEventViewModel : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
+    private val _isLoadSuccess = MutableLiveData<Boolean>()
+    val isLoadSuccess: LiveData<Boolean> = _isLoadSuccess
+
     companion object {
         private const val TAG = "FinishedEventViewModel"
     }
@@ -42,6 +45,7 @@ class FinishedEventViewModel : ViewModel() {
 
             override fun onFailure(call: Call<EventResponse>, t: Throwable) {
                 _isLoading.value = false
+                _isLoadSuccess.value = false
                 Log.e(TAG, "onFailure: ${t.message}")
             }
         })

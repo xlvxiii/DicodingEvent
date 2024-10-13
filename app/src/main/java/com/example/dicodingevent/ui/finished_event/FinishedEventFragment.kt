@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dicodingevent.data.response.ListEventsItem
 import com.example.dicodingevent.databinding.FragmentFinishedEventBinding
+import com.example.dicodingevent.ui.FailDialogFragment
 
 class FinishedEventFragment : Fragment() {
 
@@ -21,6 +22,7 @@ class FinishedEventFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+//        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
         // Inflate the layout for this fragment
         _binding = FragmentFinishedEventBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -39,6 +41,10 @@ class FinishedEventFragment : Fragment() {
 
         finishedEventViewModel.isLoading.observe(viewLifecycleOwner) {
             showLoading(it)
+        }
+
+        finishedEventViewModel.isLoadSuccess.observe(viewLifecycleOwner) {
+            showDialog(it)
         }
     }
 
@@ -70,5 +76,11 @@ class FinishedEventFragment : Fragment() {
     private fun showSelectedEventItem(event: ListEventsItem) {
         val toEventDetailActivity = FinishedEventFragmentDirections.actionNavigationFinishedEventToEventDetailActivity(event.id!!)
         findNavController().navigate(toEventDetailActivity)
+    }
+
+    private fun showDialog(isLoadSuccess: Boolean) {
+        if (!isLoadSuccess) {
+            FailDialogFragment().show(childFragmentManager, "FailDialogFragment")
+        }
     }
 }

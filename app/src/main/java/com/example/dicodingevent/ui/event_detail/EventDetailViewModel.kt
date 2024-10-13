@@ -19,8 +19,8 @@ class EventDetailViewModel() : ViewModel() {
     private val _eventDetail = MutableLiveData<EventDetailItem?>()
     val eventDetail: MutableLiveData<EventDetailItem?> = _eventDetail
 
-//    var id by Delegates.notNull<Int>()
-
+    private val _isLoadSuccess = MutableLiveData<Boolean>()
+    val isLoadSuccess: LiveData<Boolean> = _isLoadSuccess
 
     companion object{
         const val TAG = "EventDetailViewModel"
@@ -49,9 +49,9 @@ class EventDetailViewModel() : ViewModel() {
 
             override fun onFailure(call: Call<EventDetailResponse>, t: Throwable) {
                 _isLoading.value = false
+                _isLoadSuccess.value = false
                 Log.e(TAG, "onFailure: ${t.message}")
             }
         })
     }
-
 }

@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dicodingevent.data.response.ListEventsItem
 import com.example.dicodingevent.databinding.FragmentActiveEventBinding
+import com.example.dicodingevent.ui.FailDialogFragment
 
 class ActiveEventFragment : Fragment() {
 
@@ -39,6 +40,10 @@ class ActiveEventFragment : Fragment() {
 
         eventViewModel.isLoading.observe(viewLifecycleOwner) {
             showLoading(it)
+        }
+
+        eventViewModel.isLoadSuccess.observe(viewLifecycleOwner) {
+            showDialog(it)
         }
     }
 
@@ -70,6 +75,12 @@ class ActiveEventFragment : Fragment() {
     private fun showSelectedEventItem(event: ListEventsItem) {
         val toEventDetailActivity = ActiveEventFragmentDirections.actionNavigationActiveEventToEventDetailActivity(event.id!!)
         findNavController().navigate(toEventDetailActivity)
+    }
+
+    private fun showDialog(isLoadSuccess: Boolean) {
+        if (!isLoadSuccess) {
+            FailDialogFragment().show(childFragmentManager, "FailDialogFragment")
+        }
     }
 
 }

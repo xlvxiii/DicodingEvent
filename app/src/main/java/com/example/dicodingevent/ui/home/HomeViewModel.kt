@@ -25,6 +25,15 @@ class HomeViewModel : ViewModel() {
     private val _isLoading2 = MutableLiveData<Boolean>()
     val isLoading2: LiveData<Boolean> = _isLoading2
 
+    private val _isLoading3 = MutableLiveData<Boolean>()
+    val isLoading3: LiveData<Boolean> = _isLoading3
+
+    private val _searchResult = MutableLiveData<List<ListEventsItem?>?>()
+    val searchResult: LiveData<List<ListEventsItem?>?> = _searchResult
+
+    private val _isLoadSuccess = MutableLiveData<Boolean>()
+    val isLoadSuccess: LiveData<Boolean> = _isLoadSuccess
+
     companion object {
         const val TAG = "HomeViewModel"
     }
@@ -49,6 +58,7 @@ class HomeViewModel : ViewModel() {
 
             override fun onFailure(call: Call<EventResponse>, t: Throwable) {
                 _isLoading.value = false
+                _isLoadSuccess.value = false
                 Log.e(TAG, "onFailure: ${t.message}")
             }
         })
@@ -69,6 +79,28 @@ class HomeViewModel : ViewModel() {
 
             override fun onFailure(call: Call<EventResponse>, t: Throwable) {
                 _isLoading2.value = false
+                _isLoadSuccess.value = false
+                Log.e(TAG, "onFailure: ${t.message}")
+            }
+        })
+    }
+
+    fun fetchSearchResult(keyword: String) {
+        _isLoading3.value = true
+        val client = ApiConfig.getApiService().searchEvent(-1, keyword)
+        client.enqueue(object : Callback<EventResponse> {
+            override fun onResponse(call: Call<EventResponse>, response: Response<EventResponse>) {
+                _isLoading3.value = false
+                if (response.isSuccessful) {
+                    _searchResult.value = response.body()?.listEvents
+                } else {
+                    Log.e(TAG, "onFailure: ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<EventResponse>, t: Throwable) {
+                _isLoading3.value = false
+                _isLoadSuccess.value = false
                 Log.e(TAG, "onFailure: ${t.message}")
             }
         })

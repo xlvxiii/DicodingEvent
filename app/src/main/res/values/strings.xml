@@ -15,4 +15,8 @@
     <string name="title_kuota">Sisa Kuota</string>
     <string name="title_event_detail">Event Detail</string>
     <string name="btn_register">Register</string>
+    <string name="searchbar_hint">Search</string>
+    <string name="text_result">Hasil pencarian</string>
+    <string name="empty_search_result">Hasil pencarian tidak ditemukan</string>
+    <string name="thumbnail">Thumbnail</string>
 </resources>
