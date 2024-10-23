@@ -14,4 +14,6 @@
     <string name="text_result">Hasil pencarian</string>
     <string name="empty_search_result">Hasil pencarian tidak ditemukan</string>
     <string name="thumbnail">Thumbnail</string>
+    <string name="title_settings">Settings</string>
+    <string name="dark_mode">Darkmode</string>
 </resources>

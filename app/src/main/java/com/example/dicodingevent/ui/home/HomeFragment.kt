@@ -75,8 +75,10 @@ class HomeFragment : Fragment() {
             setSearchResultData(eventList)
             if (eventList?.isEmpty() == true) {
                 binding.tvTextEmptyResult.text = getString(R.string.empty_search_result)
+                binding.tvTextResult.text = ""
             } else {
                 binding.tvTextResult.text = getString(R.string.text_result)
+                binding.tvTextEmptyResult.text = ""
             }
         }
 
