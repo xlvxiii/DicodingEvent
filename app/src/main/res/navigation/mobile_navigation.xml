@@ -12,9 +12,6 @@
         <action
             android:id="@+id/action_navigation_home_to_event_detail_activity"
             app:destination="@id/event_detail_activity" />
-        <!--        <action-->
-<!--            android:id="@+id/action_navigation_home_to_event_detail_fragment"-->
-<!--            app:destination="@id/event_detail_fragment" />-->
     </fragment>
 
     <fragment
@@ -38,6 +35,16 @@
     </fragment>
 
     <fragment
+        android:id="@+id/navigation_favorite"
+        android:name="com.example.dicodingevent.ui.favorite.FavoriteFragment"
+        android:label="@string/title_favorite"
+        tools:layout="@layout/fragment_favorite" >
+        <action
+            android:id="@+id/action_navigation_favorite_to_event_detail_activity"
+            app:destination="@id/event_detail_activity" />
+    </fragment>
+
+    <fragment
         android:id="@+id/navigation_settings"
         android:name="com.example.dicodingevent.ui.settings.SettingsFragment"
         tools:layout="@layout/fragment_settings" />
@@ -50,12 +57,5 @@
             android:name="id"
             app:argType="integer" />
     </activity>
-
-<!--    <fragment-->
-<!--        android:id="@+id/event_detail_fragment"-->
-<!--        android:name="com.example.dicodingevent.ui.event_detail.EventDetailFragment"-->
-<!--        tools:layout="@layout/fragment_event_detail" />-->
-
-
 
 </navigation>

@@ -43,6 +43,9 @@ data class ListEventsItem(
 
 	@field:SerializedName("id")
 	val id: Int? = null,
+
+	@field:SerializedName("beginTime")
+	val beginTime: String? = null,
 )
 
 data class EventDetailItem(

@@ -14,14 +14,17 @@ kotlinxCoroutinesCore = "1.7.3"
 loggingInterceptor = "4.11.0"
 material = "1.12.0"
 constraintlayout = "2.1.4"
-lifecycleLivedataKtx = "2.8.6"
-lifecycleViewmodelKtx = "2.8.6"
+lifecycleLivedataKtx = "2.6.2"
+lifecycleViewmodelKtx = "2.6.2"
 navigationFragmentKtx = "2.8.3"
 navigationSafeArgsGradlePlugin = "2.8.3"
 navigationUiKtx = "2.8.3"
 activity = "1.9.3"
 retrofit = "2.9.0"
 preference = "1.2.1"
+roomCompiler = "2.5.0"
+roomRuntime = "2.5.2"
+roomKtx = "2.5.2"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
@@ -46,6 +49,9 @@ androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 androidx-preference = { group = "androidx.preference", name = "preference", version.ref = "preference" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
