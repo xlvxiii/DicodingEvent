@@ -7,8 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dicodingevent.R
+import com.example.dicodingevent.data.local.entity.EventEntity
 import com.example.dicodingevent.data.repositories.Result
 import com.example.dicodingevent.databinding.FragmentFavoriteBinding
 
@@ -43,33 +45,6 @@ class FavoriteFragment : Fragment() {
             viewModel.deleteFavoriteEvent(event.id)
         }
 
-//        viewModel.getEvents(-1).observe(viewLifecycleOwner) { favoriteEvents ->
-//            if (favoriteEvents != null) {
-//                when (favoriteEvents) {
-//                    is Result.Loading -> {
-//                        // Handle loading state
-//                        binding?.progressBar?.visibility = View.VISIBLE
-//                    }
-//                    is Result.Success -> {
-//                        // Handle success state with the list of favorite events
-//                        binding?.progressBar?.visibility = View.GONE
-//                        // Update UI with the list of favorite events
-//                        val eventData = favoriteEvents.data
-//                        eventAdapter.submitList(eventData)
-//                    }
-//                    is Result.Error -> {
-//                        // Handle error state
-//                        binding?.progressBar?.visibility = View.GONE
-//                        Toast.makeText(
-//                            context,
-//                            "Terjadi kesalahan" + favoriteEvents.error,
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//                    }
-//                }
-//            }
-//        }
-
         viewModel.getFavoriteEvents().observe(viewLifecycleOwner) { favoriteEvents ->
             binding?.progressBar?.visibility = View.GONE
             eventAdapter.submitList(favoriteEvents)
@@ -79,5 +54,16 @@ class FavoriteFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
             adapter = eventAdapter
         }
+
+        eventAdapter.setOnItemClickCallback(object : FavoriteEventAdapter.OnItemClickCallback {
+            override fun onItemClicked(data: EventEntity) {
+                showSelectedEventItem(data)
+            }
+        })
+    }
+
+    private fun showSelectedEventItem(event: EventEntity) {
+        val toEventDetailActivity = FavoriteFragmentDirections.actionNavigationFavoriteToEventDetailActivity(event.id)
+        findNavController().navigate(toEventDetailActivity)
     }
 }

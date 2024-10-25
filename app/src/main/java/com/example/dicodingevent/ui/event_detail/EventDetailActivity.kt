@@ -111,7 +111,7 @@ class EventDetailActivity : AppCompatActivity() {
                         binding.progressBar.visibility = View.GONE
                         Toast.makeText(
                             this,
-                            "Terjadi kesalahan" + eventDetail.error,
+                            "Terjadi kesalahan",
                             Toast.LENGTH_SHORT
                         ).show()
                     }

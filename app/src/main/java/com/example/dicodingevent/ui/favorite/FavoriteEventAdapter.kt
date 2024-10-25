@@ -15,6 +15,8 @@ import com.example.dicodingevent.databinding.ItemFavoriteEventBinding
 
 class FavoriteEventAdapter(private val onFavoriteClick: (EventEntity) -> Unit) : ListAdapter<EventEntity, FavoriteEventAdapter.MyViewHolder>(
     DIFF_CALLBACK) {
+
+    private lateinit var onItemClickCallback: OnItemClickCallback
     class MyViewHolder(val binding: ItemFavoriteEventBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(event: EventEntity) {
             binding.tvEventName.text = event.name
@@ -36,6 +38,10 @@ class FavoriteEventAdapter(private val onFavoriteClick: (EventEntity) -> Unit) :
         val event = getItem(position)
         holder.bind(event)
 
+        holder.itemView.setOnClickListener {
+            onItemClickCallback.onItemClicked(event)
+        }
+
         val ivFavorite = holder.binding.ivFavorite
         if (event.isFavorite) {
             ivFavorite.setImageDrawable(ContextCompat.getDrawable(ivFavorite.context, R.drawable.baseline_favorite_24))
@@ -46,6 +52,14 @@ class FavoriteEventAdapter(private val onFavoriteClick: (EventEntity) -> Unit) :
         ivFavorite.setOnClickListener {
             onFavoriteClick(event)
         }
+    }
+
+    fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
+        this.onItemClickCallback = onItemClickCallback
+    }
+
+    interface OnItemClickCallback {
+        fun onItemClicked(data: EventEntity)
     }
 
     companion object {
