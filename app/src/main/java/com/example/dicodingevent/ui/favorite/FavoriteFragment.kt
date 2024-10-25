@@ -39,11 +39,8 @@ class FavoriteFragment : Fragment() {
         }
 
         val eventAdapter = FavoriteEventAdapter { event ->
-            if (event.isFavorite) {
-                viewModel.setFavoriteEvent(event, false)
-            } else {
-                viewModel.setFavoriteEvent(event, true)
-            }
+            // Delete event from table when favorite button clicked
+            viewModel.deleteFavoriteEvent(event.id)
         }
 
 //        viewModel.getEvents(-1).observe(viewLifecycleOwner) { favoriteEvents ->

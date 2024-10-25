@@ -16,4 +16,9 @@ class FavoriteViewModel(private val eventRepository: EventRepository) : ViewMode
         }
     }
 
+    fun deleteFavoriteEvent(eventId: Int) {
+        viewModelScope.launch {
+            eventRepository.deleteFavoriteEvent(eventId)
+        }
+    }
 }
