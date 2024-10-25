@@ -17,7 +17,7 @@ interface EventDao {
     fun getFavoriteEvents(): LiveData<List<EventEntity>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertEvent(event: List<EventEntity>)
+    suspend fun insertEvent(event: EventEntity)
 
     @Update
     suspend fun updateEvent(event: EventEntity)
@@ -28,11 +28,15 @@ interface EventDao {
     @Query("SELECT EXISTS(SELECT * FROM event WHERE id = :id AND isFavorite = 1)")
     suspend fun isEventFavorite(id: Int): Boolean
 
+    // check if event id is exist in database
+    @Query("SELECT EXISTS(SELECT * FROM event WHERE id = :id)")
+    fun isExist(id: Int): LiveData<Boolean>
+
 //    @Query("SELECT * FROM event where id = :id")
 //    fun getEventById(id: Int): LiveData<EventEntity>
 
-//    @Query("DELETE FROM event WHERE id = :id")
-//    fun deleteEventById(id: Int)
+    @Query("DELETE FROM event WHERE id = :id")
+    suspend fun deleteEventById(id: Int)
 
 //    @Query("UPDATE event SET isFavorite = :isFavorite WHERE id = :id")
 //    fun updateEventById(id: Int, isFavorite: Boolean)

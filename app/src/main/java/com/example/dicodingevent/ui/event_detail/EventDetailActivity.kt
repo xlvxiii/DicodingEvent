@@ -71,7 +71,7 @@ class EventDetailActivity : AppCompatActivity() {
         }
 
         val fabFavorite = binding.fabFavorite
-        fabFavorite.setImageDrawable(ContextCompat.getDrawable(fabFavorite.context, R.drawable.baseline_favorite_border_24))
+//        fabFavorite.setImageDrawable(ContextCompat.getDrawable(fabFavorite.context, R.drawable.baseline_favorite_border_24))
 
         viewModel.fetchEventDetail(args.id).observe(this, Observer { eventDetail ->
             binding.progressBar.visibility = View.GONE
@@ -90,6 +90,22 @@ class EventDetailActivity : AppCompatActivity() {
                         binding.tvEventQuota.text = eventDetail.data?.quota.toString()
                         binding.tvDesc.text = HtmlCompat.fromHtml(eventDetail.data?.description.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY)
                         setRegisterButton(eventDetail.data?.link.toString())
+
+                        viewModel.isFavoriteEvent(args.id).observe(this, Observer {
+                            if (it) {
+                                fabFavorite.setImageDrawable(ContextCompat.getDrawable(fabFavorite.context, R.drawable.baseline_favorite_24))
+                                fabFavorite.setOnClickListener {
+                                    viewModel.deleteFavoriteEvent(eventDetail.data?.id)
+                                    Toast.makeText(this, "Event removed from favorite", Toast.LENGTH_SHORT).show()
+                                }
+                            } else {
+                                fabFavorite.setImageDrawable(ContextCompat.getDrawable(fabFavorite.context, R.drawable.baseline_favorite_border_24))
+                                fabFavorite.setOnClickListener {
+                                    viewModel.saveFavoriteEvent(eventDetail.data)
+                                    Toast.makeText(this, "Event added to favorite", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        })
                     }
                     is Result.Error -> {
                         binding.progressBar.visibility = View.GONE

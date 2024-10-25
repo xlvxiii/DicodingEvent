@@ -42,7 +42,7 @@ class EventRepository private constructor(
             }
 
             eventDao.deleteAll()
-            eventDao.insertEvent(eventList!!)
+//            eventDao.insertEvent(eventList!!)
         } catch (e: Exception) {
             Log.d("EventRepository", "getAllEvents: ${e.message.toString()} ")
             emit(Result.Error(e.message.toString()))
@@ -60,11 +60,11 @@ class EventRepository private constructor(
         eventDao.updateEvent(event)
     }
 
-    private val _events = MutableLiveData<EventDetailItem?>()
     fun fetchEventDetail(eventId: Int): LiveData<Result<EventDetailItem?>> = liveData {
         emit(Result.Loading)
         val events: LiveData<Result<EventDetailItem?>>
         try {
+            val _events = MutableLiveData<EventDetailItem?>()
             val response = apiService.getEventDetail(eventId)
              events = _events.map { Result.Success(it) }
             _events.value = response.event
@@ -73,13 +73,33 @@ class EventRepository private constructor(
             Log.d("EventRepository", "getEventDetail: ${e.message.toString()} ")
             emit(Result.Error(e.message.toString()))
         }
-
     }
 
-//    suspend fun saveFavoriteEvent(event: EventEntity) {
-//        eventDao.insert(event)
-//    }
+    suspend fun saveFavoriteEvent(eventDetail: EventDetailItem?) {
+        try {
+            val eventData = EventEntity(
+                eventDetail?.id!!,
+                eventDetail.name!!,
+                eventDetail.summary!!,
+                eventDetail.mediaCover!!,
+                eventDetail.imageLogo!!,
+                eventDetail.beginTime!!,
+                true
+            )
 
+            eventDao.insertEvent(eventData)
+        } catch (e: Exception) {
+            Log.d("EventRepository", "saveFavoriteEvent: ${e.message.toString()} ")
+        }
+    }
+
+    suspend fun deleteFavoriteEvent(eventId: Int?) {
+            eventDao.deleteEventById(eventId!!)
+    }
+
+    fun isExist(eventId: Int): LiveData<Boolean> {
+        return eventDao.isExist(eventId)
+    }
 
     companion object {
         @Volatile
