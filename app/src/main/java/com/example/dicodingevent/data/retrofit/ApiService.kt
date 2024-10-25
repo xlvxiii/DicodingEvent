@@ -16,7 +16,7 @@ interface ApiService {
     fun getFiveActiveEvents(@Query("active") active: Int, @Query("limit") limit: Int) : Call<EventResponse>
 
     @GET("events/{id}")
-    fun getEventDetail(@Path("id") id: Int) : Call<EventDetailResponse>
+    suspend fun getEventDetail(@Path("id") id: Int) : EventDetailResponse
 
     @GET("events")
     fun searchEvent(@Query("active") active: Int, @Query("q") q: String) : Call<EventResponse>

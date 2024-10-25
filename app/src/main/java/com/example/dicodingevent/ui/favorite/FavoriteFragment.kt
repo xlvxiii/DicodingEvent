@@ -46,32 +46,32 @@ class FavoriteFragment : Fragment() {
             }
         }
 
-        viewModel.getEvents(-1).observe(viewLifecycleOwner) { favoriteEvents ->
-            if (favoriteEvents != null) {
-                when (favoriteEvents) {
-                    is Result.Loading -> {
-                        // Handle loading state
-                        binding?.progressBar?.visibility = View.VISIBLE
-                    }
-                    is Result.Success -> {
-                        // Handle success state with the list of favorite events
-                        binding?.progressBar?.visibility = View.GONE
-                        // Update UI with the list of favorite events
-                        val eventData = favoriteEvents.data
-                        eventAdapter.submitList(eventData)
-                    }
-                    is Result.Error -> {
-                        // Handle error state
-                        binding?.progressBar?.visibility = View.GONE
-                        Toast.makeText(
-                            context,
-                            "Terjadi kesalahan" + favoriteEvents.error,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            }
-        }
+//        viewModel.getEvents(-1).observe(viewLifecycleOwner) { favoriteEvents ->
+//            if (favoriteEvents != null) {
+//                when (favoriteEvents) {
+//                    is Result.Loading -> {
+//                        // Handle loading state
+//                        binding?.progressBar?.visibility = View.VISIBLE
+//                    }
+//                    is Result.Success -> {
+//                        // Handle success state with the list of favorite events
+//                        binding?.progressBar?.visibility = View.GONE
+//                        // Update UI with the list of favorite events
+//                        val eventData = favoriteEvents.data
+//                        eventAdapter.submitList(eventData)
+//                    }
+//                    is Result.Error -> {
+//                        // Handle error state
+//                        binding?.progressBar?.visibility = View.GONE
+//                        Toast.makeText(
+//                            context,
+//                            "Terjadi kesalahan" + favoriteEvents.error,
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+//                    }
+//                }
+//            }
+//        }
 
         viewModel.getFavoriteEvents().observe(viewLifecycleOwner) { favoriteEvents ->
             binding?.progressBar?.visibility = View.GONE

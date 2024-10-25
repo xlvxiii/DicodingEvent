@@ -5,14 +5,18 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Observer
 import androidx.navigation.navArgs
 import com.bumptech.glide.Glide
 import com.example.dicodingevent.R
+import com.example.dicodingevent.data.repositories.Result
 import com.example.dicodingevent.databinding.ActivityEventDetailBinding
 import com.example.dicodingevent.ui.FailDialogFragment
 
@@ -37,25 +41,67 @@ class EventDetailActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Event Detail"
 
-        eventDetailViewModel.fetchEventDetail(args.id)
+//        eventDetailViewModel.fetchEventDetail(args.id)
+//
+//        eventDetailViewModel.eventDetail.observe(this) { eventDetail ->
+//            Glide.with(binding.root.context).load(eventDetail?.imageLogo).into(binding.imgEventPhoto)
+//            binding.tvEventName.text = eventDetail?.name
+//            binding.tvEventOwner.text = eventDetail?.ownerName
+//            binding.tvEventDate.text = eventDetail?.beginTime
+//            binding.tvEventQuota.text = eventDetail?.quota.toString()
+//            binding.tvDesc.text = HtmlCompat.fromHtml(eventDetail?.description.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY)
+//            setRegisterButton(eventDetail?.link.toString())
+//        }
+//
+//        eventDetailViewModel.isLoading.observe(this) {
+//            showLoading(it)
+//        }
+//
+//        eventDetailViewModel.isLoadSuccess.observe(this) {
+//            showDialog(it)
+//        }
+//
+//        binding.fabFavorite.setOnClickListener {
+//            eventDetailViewModel.saveFavoriteEvent()
+//        }
 
-        eventDetailViewModel.eventDetail.observe(this) { eventDetail ->
-            Glide.with(binding.root.context).load(eventDetail?.imageLogo).into(binding.imgEventPhoto)
-            binding.tvEventName.text = eventDetail?.name
-            binding.tvEventOwner.text = eventDetail?.ownerName
-            binding.tvEventDate.text = eventDetail?.beginTime
-            binding.tvEventQuota.text = eventDetail?.quota.toString()
-            binding.tvDesc.text = HtmlCompat.fromHtml(eventDetail?.description.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY)
-            setRegisterButton(eventDetail?.link.toString())
+        val factory: ViewModelFactory = ViewModelFactory.getInstance(this)
+        val viewModel: EventDetailViewModel by viewModels {
+            factory
         }
 
-        eventDetailViewModel.isLoading.observe(this) {
-            showLoading(it)
-        }
+        val fabFavorite = binding.fabFavorite
+        fabFavorite.setImageDrawable(ContextCompat.getDrawable(fabFavorite.context, R.drawable.baseline_favorite_border_24))
 
-        eventDetailViewModel.isLoadSuccess.observe(this) {
-            showDialog(it)
-        }
+        viewModel.fetchEventDetail(args.id).observe(this, Observer { eventDetail ->
+            binding.progressBar.visibility = View.GONE
+            if (eventDetail != null) {
+                when (eventDetail) {
+                    is Result.Loading -> {
+                        binding.progressBar.visibility = View.VISIBLE
+                    }
+                    is Result.Success -> {
+                        binding.progressBar.visibility = View.GONE
+
+                        Glide.with(binding.root.context).load(eventDetail.data?.imageLogo).into(binding.imgEventPhoto)
+                        binding.tvEventName.text = eventDetail.data?.name
+                        binding.tvEventOwner.text = eventDetail.data?.ownerName
+                        binding.tvEventDate.text = eventDetail.data?.beginTime
+                        binding.tvEventQuota.text = eventDetail.data?.quota.toString()
+                        binding.tvDesc.text = HtmlCompat.fromHtml(eventDetail.data?.description.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY)
+                        setRegisterButton(eventDetail.data?.link.toString())
+                    }
+                    is Result.Error -> {
+                        binding.progressBar.visibility = View.GONE
+                        Toast.makeText(
+                            this,
+                            "Terjadi kesalahan" + eventDetail.error,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

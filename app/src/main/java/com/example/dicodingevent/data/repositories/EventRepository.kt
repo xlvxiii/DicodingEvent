@@ -3,11 +3,14 @@ package com.example.dicodingevent.data.repositories
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.map
 import com.example.dicodingevent.data.local.entity.EventEntity
 import com.example.dicodingevent.data.local.room.EventDao
+import com.example.dicodingevent.data.response.EventDetailItem
 import com.example.dicodingevent.data.response.EventResponse
+import com.example.dicodingevent.data.response.ListEventsItem
 import com.example.dicodingevent.data.retrofit.ApiService
 import com.example.dicodingevent.utilities.AppExecutors
 import retrofit2.Call
@@ -19,10 +22,8 @@ class EventRepository private constructor(
     private val eventDao: EventDao,
     private val appExecutors: AppExecutors
 ) {
-    private val result = MediatorLiveData<Result<List<EventEntity>>>()
 
     fun getEvents(active: Int): LiveData<Result<List<EventEntity>>> = liveData {
-//        result.value = Result.Loading
         emit(Result.Loading)
         try {
             val response = apiService.suspendedGetEvents(active)
@@ -48,44 +49,6 @@ class EventRepository private constructor(
         }
         val localData: LiveData<Result<List<EventEntity>>> = eventDao.getAllEvents().map { Result.Success(it) }
         emitSource(localData)
-
-//        val client = apiService.getEvents(-1)
-//        client.enqueue(object : Callback<EventResponse> {
-//            override fun onResponse(call: Call<EventResponse>, response: Response<EventResponse>
-//            ) {
-//                if (response.isSuccessful) {
-//                    val events = response.body()?.listEvents
-//                    val eventList = ArrayList<EventEntity>()
-//                    appExecutors.diskIO.execute {
-//                        events?.forEach { event ->
-//                            val isFavorite = eventDao.isEventFavorite(event?.id!!)
-//                            val eventEntity = EventEntity(
-//                                event.id,
-//                                event.name!!,
-//                                event.summary!!,
-//                                event.mediaCover!!,
-//                                event.imageLogo!!,
-//                                event.beginTime!!,
-//                                isFavorite
-//                            )
-//                            eventList.add(eventEntity)
-//                        }
-//                        eventDao.deleteAll()
-//                        eventDao.insertEvent(eventList)
-//                    }
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<EventResponse>, t: Throwable) {
-//                result.value = Result.Error(t.message.toString())
-//            }
-//        })
-
-//        val localData = eventDao.getAllEvents()
-//        result.addSource(localData) { newData: List<EventEntity> ->
-//            result.value = Result.Success(newData)
-//        }
-//        return result
     }
 
     fun getFavoritesEvents(): LiveData<List<EventEntity>> {
@@ -96,6 +59,27 @@ class EventRepository private constructor(
         event.isFavorite = favoriteState
         eventDao.updateEvent(event)
     }
+
+    private val _events = MutableLiveData<EventDetailItem?>()
+    fun fetchEventDetail(eventId: Int): LiveData<Result<EventDetailItem?>> = liveData {
+        emit(Result.Loading)
+        val events: LiveData<Result<EventDetailItem?>>
+        try {
+            val response = apiService.getEventDetail(eventId)
+             events = _events.map { Result.Success(it) }
+            _events.value = response.event
+            emitSource(events)
+        } catch (e: Exception) {
+            Log.d("EventRepository", "getEventDetail: ${e.message.toString()} ")
+            emit(Result.Error(e.message.toString()))
+        }
+
+    }
+
+//    suspend fun saveFavoriteEvent(event: EventEntity) {
+//        eventDao.insert(event)
+//    }
+
 
     companion object {
         @Volatile
