@@ -170,6 +170,7 @@ class HomeFragment : Fragment() {
         findNavController().navigate(toEventDetailActivity)
     }
 
+    // show dialog if failed to load data
     private fun isSuccess(isLoadSuccess: Boolean) {
         if (!isLoadSuccess) {
             FailDialogFragment().show(childFragmentManager, "FailDialogFragment")

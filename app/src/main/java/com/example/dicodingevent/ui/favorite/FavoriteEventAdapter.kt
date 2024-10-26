@@ -43,11 +43,7 @@ class FavoriteEventAdapter(private val onFavoriteClick: (EventEntity) -> Unit) :
         }
 
         val ivFavorite = holder.binding.ivFavorite
-        if (event.isFavorite) {
-            ivFavorite.setImageDrawable(ContextCompat.getDrawable(ivFavorite.context, R.drawable.baseline_favorite_24))
-        } else {
-            ivFavorite.setImageDrawable(ContextCompat.getDrawable(ivFavorite.context,R.drawable.baseline_favorite_border_24))
-        }
+        ivFavorite.setImageDrawable(ContextCompat.getDrawable(ivFavorite.context, R.drawable.baseline_favorite_24))
 
         ivFavorite.setOnClickListener {
             onFavoriteClick(event)
