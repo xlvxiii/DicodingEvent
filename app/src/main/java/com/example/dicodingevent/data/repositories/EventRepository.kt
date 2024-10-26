@@ -8,41 +8,69 @@ import androidx.lifecycle.map
 import com.example.dicodingevent.data.local.entity.EventEntity
 import com.example.dicodingevent.data.local.room.EventDao
 import com.example.dicodingevent.data.response.EventDetailItem
+import com.example.dicodingevent.data.response.ListEventsItem
 import com.example.dicodingevent.data.retrofit.ApiService
 import com.example.dicodingevent.utilities.AppExecutors
 
 class EventRepository private constructor(
     private val apiService: ApiService,
-    private val eventDao: EventDao,
-    private val appExecutors: AppExecutors
+    private val eventDao: EventDao
 ) {
 
-//    fun getEvents(active: Int): LiveData<Result<List<EventEntity>>> = liveData {
+    private val _listEvents = MutableLiveData<List<ListEventsItem?>?>()
+    private val listEvents: LiveData<Result<List<ListEventsItem?>?>> = _listEvents.map { Result.Success(it) }
+
+    private val _listFinishedEvents = MutableLiveData<List<ListEventsItem?>?>()
+    private val listFinishedEvents: LiveData<Result<List<ListEventsItem?>?>> = _listFinishedEvents.map { Result.Success(it) }
+
+    private val _eventDetail = MutableLiveData<EventDetailItem?>()
+    private val eventDetail: LiveData<Result<EventDetailItem?>> = _eventDetail.map { Result.Success(it) }
+
+    private val _searchResult = MutableLiveData<List<ListEventsItem?>?>()
+    private val searchResult: LiveData<Result<List<ListEventsItem?>?>> = _searchResult.map { Result.Success(it) }
+
+    fun getEvents(active: Int, limit: Int?): LiveData<Result<List<ListEventsItem?>?>> = liveData {
+        emit(Result.Loading)
+        try {
+//            val _listEvents = MutableLiveData<List<ListEventsItem?>?>()
+            val response = apiService.suspendedGetEvents(active, limit)
+//            val listEvents: LiveData<Result<List<ListEventsItem?>?>> = _listEvents.map { Result.Success(it) }
+            if (active == 1) {
+                _listEvents.value = response.listEvents
+            } else {
+                _listFinishedEvents.value = response.listEvents
+            }
+        } catch (e: Exception) {
+            Log.d("EventRepository", "getEvents: ${e.message.toString()} ")
+            emit(Result.Error(e.message.toString()))
+        }
+        if (active == 1) emitSource(listEvents) else emitSource(listFinishedEvents)
+    }
+
+    fun getSearchResult(keyword: String): LiveData<Result<List<ListEventsItem?>?>> = liveData {
+        emit(Result.Loading)
+        try {
+            val response = apiService.suspendedSearchEvent(-1, keyword)
+            _searchResult.value = response.listEvents
+        } catch (e: Exception) {
+            Log.d("EventRepository", "getSearchResult: ${e.message.toString()} ")
+            emit(Result.Error(e.message.toString()))
+        }
+        emitSource(searchResult)
+    }
+
+//    fun getFinishedEvents(active: Int): LiveData<Result<List<ListEventsItem?>?>> = liveData {
 //        emit(Result.Loading)
 //        try {
+//            val _listFinishedEvents = MutableLiveData<List<ListEventsItem?>?>()
 //            val response = apiService.suspendedGetEvents(active)
-//            val events = response.listEvents
-//            val eventList = events?.map { event ->
-//                val isFavorite = eventDao.isEventFavorite(event?.id!!)
-//                EventEntity(
-//                    event.id,
-//                    event.name!!,
-//                    event.summary!!,
-//                    event.mediaCover!!,
-//                    event.imageLogo!!,
-//                    event.beginTime!!,
-//                    isFavorite
-//                )
-//            }
-//
-//            eventDao.deleteAll()
-////            eventDao.insertEvent(eventList!!)
+//            val listFinishedEvents: LiveData<Result<List<ListEventsItem?>?>> = _listFinishedEvents.map { Result.Success(it) }
+//            _listFinishedEvents.value = response.listEvents
+//            emitSource(listFinishedEvents)
 //        } catch (e: Exception) {
-//            Log.d("EventRepository", "getAllEvents: ${e.message.toString()} ")
+//            Log.d("EventRepository", "getEvents: ${e.message.toString()} ")
 //            emit(Result.Error(e.message.toString()))
 //        }
-//        val localData: LiveData<Result<List<EventEntity>>> = eventDao.getAllEvents().map { Result.Success(it) }
-//        emitSource(localData)
 //    }
 
     fun getFavoritesEvents(): LiveData<List<EventEntity>> {
@@ -56,18 +84,42 @@ class EventRepository private constructor(
 
     fun fetchEventDetail(eventId: Int): LiveData<Result<EventDetailItem?>> = liveData {
         emit(Result.Loading)
-        val events: LiveData<Result<EventDetailItem?>>
         try {
-            val _events = MutableLiveData<EventDetailItem?>()
+//            val _events = MutableLiveData<EventDetailItem?>()
             val response = apiService.getEventDetail(eventId)
-             events = _events.map { Result.Success(it) }
-            _events.value = response.event
-            emitSource(events)
+//            events = _events.map { Result.Success(it) }
+            _eventDetail.value = response.event
         } catch (e: Exception) {
             Log.d("EventRepository", "getEventDetail: ${e.message.toString()} ")
             emit(Result.Error(e.message.toString()))
         }
+        emitSource(eventDetail)
     }
+
+    //    fun fetchEventDetail(eventId: Int) {
+//        _isLoading.value = true
+//        val client = ApiConfig.getApiService().getEventDetail(eventId)
+//
+//        client.enqueue(object: Callback<EventDetailResponse> {
+//            override fun onResponse(
+//                call: Call<EventDetailResponse>,
+//                response: Response<EventDetailResponse>
+//            ) {
+//                _isLoading.value = false
+//                if (response.isSuccessful) {
+//                    _eventDetail.value = response.body()?.event
+//                } else {
+//                    Log.e(TAG, "onFailure: ${response.message()}")
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<EventDetailResponse>, t: Throwable) {
+//                _isLoading.value = false
+//                _isLoadSuccess.value = false
+//                Log.e(TAG, "onFailure: ${t.message}")
+//            }
+//        })
+//    }
 
     suspend fun saveFavoriteEvent(eventDetail: EventDetailItem?) {
         try {
@@ -103,7 +155,7 @@ class EventRepository private constructor(
             appExecutors: AppExecutors
         ): EventRepository =
             instance ?: synchronized(this) {
-                instance ?: EventRepository(apiService, eventDao, appExecutors)
+                instance ?: EventRepository(apiService, eventDao)
             }.also { instance = it }
     }
 }

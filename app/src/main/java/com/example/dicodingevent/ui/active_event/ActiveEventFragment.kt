@@ -1,22 +1,22 @@
 package com.example.dicodingevent.ui.active_event
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.dicodingevent.data.repositories.Result
 import com.example.dicodingevent.data.response.ListEventsItem
 import com.example.dicodingevent.databinding.FragmentActiveEventBinding
-import com.example.dicodingevent.ui.FailDialogFragment
 
 class ActiveEventFragment : Fragment() {
 
     private var _binding: FragmentActiveEventBinding? = null
     private val binding get() = _binding!!
-    private val eventViewModel: EventViewModel by viewModels<EventViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,30 +34,36 @@ class ActiveEventFragment : Fragment() {
 
         binding.rvEvent.layoutManager = LinearLayoutManager(requireActivity())
 
-        eventViewModel.listEvent.observe(viewLifecycleOwner) { eventList ->
-            setEventData(eventList)
+        val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity())
+        val viewModel: EventViewModel by viewModels {
+            factory
         }
 
-        eventViewModel.isLoading.observe(viewLifecycleOwner) {
-            showLoading(it)
-        }
-
-        eventViewModel.isLoadSuccess.observe(viewLifecycleOwner) {
-            showDialog(it)
+        viewModel.getEvents(1).observe(viewLifecycleOwner) { eventList ->
+            binding.progressBar.visibility = View.GONE
+            if (eventList != null) {
+                when(eventList) {
+                    Result.Loading -> {
+                        binding.progressBar.visibility = View.VISIBLE
+                    }
+                    is Result.Success -> {
+                        binding.progressBar.visibility = View.GONE
+                        setEventData(eventList.data)
+                    }
+                    is Result.Error -> {
+                        binding.progressBar.visibility = View.GONE
+//                        FailDialogFragment().show(childFragmentManager, "FailDialogFragment")
+                        Toast.makeText(context, "No internet connection", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+            }
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun showLoading(isLoading: Boolean) {
-        if (isLoading) {
-            binding.progressBar.visibility = View.VISIBLE
-        } else {
-            binding.progressBar.visibility = View.GONE
-        }
     }
 
     private fun setEventData(eventList: List<ListEventsItem?>?) {
@@ -75,12 +81,6 @@ class ActiveEventFragment : Fragment() {
     private fun showSelectedEventItem(event: ListEventsItem) {
         val toEventDetailActivity = ActiveEventFragmentDirections.actionNavigationActiveEventToEventDetailActivity(event.id!!)
         findNavController().navigate(toEventDetailActivity)
-    }
-
-    private fun showDialog(isLoadSuccess: Boolean) {
-        if (!isLoadSuccess) {
-            FailDialogFragment().show(childFragmentManager, "FailDialogFragment")
-        }
     }
 
 }

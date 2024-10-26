@@ -1,22 +1,22 @@
 package com.example.dicodingevent.ui.finished_event
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.dicodingevent.data.repositories.Result
 import com.example.dicodingevent.data.response.ListEventsItem
 import com.example.dicodingevent.databinding.FragmentFinishedEventBinding
-import com.example.dicodingevent.ui.FailDialogFragment
 
 class FinishedEventFragment : Fragment() {
 
     private var _binding: FragmentFinishedEventBinding? = null
     private val binding get() = _binding!!
-    private val finishedEventViewModel by viewModels<FinishedEventViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,32 +33,33 @@ class FinishedEventFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val factory = ViewModelFactory.getInstance(requireActivity())
+        val finishedEventViewModel: FinishedEventViewModel by viewModels {
+            factory
+        }
+
         binding.rvFinishedEvent.layoutManager = LinearLayoutManager(requireActivity())
 
-        finishedEventViewModel.listEvent.observe(viewLifecycleOwner) { finishedEventList ->
-            setFinishedEventData(finishedEventList)
-        }
-
-        finishedEventViewModel.isLoading.observe(viewLifecycleOwner) {
-            showLoading(it)
-        }
-
-        finishedEventViewModel.isLoadSuccess.observe(viewLifecycleOwner) {
-            showDialog(it)
+        finishedEventViewModel.getFinishedEvents().observe(viewLifecycleOwner) { finishedEventList ->
+            if (finishedEventList != null) {
+                when (finishedEventList) {
+                    Result.Loading -> binding.progressBar.visibility = View.VISIBLE
+                    is Result.Success -> {
+                        binding.progressBar.visibility = View.GONE
+                        setFinishedEventData(finishedEventList.data)
+                    }
+                    is Result.Error -> {
+                        binding.progressBar.visibility = View.GONE
+                        Toast.makeText(context, "No internet connection", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun showLoading(isLoading: Boolean) {
-        if (isLoading) {
-            binding.progressBar.visibility = View.VISIBLE
-        } else {
-            binding.progressBar.visibility = View.GONE
-        }
     }
 
     private fun setFinishedEventData(eventList: List<ListEventsItem?>?) {
@@ -76,11 +77,5 @@ class FinishedEventFragment : Fragment() {
     private fun showSelectedEventItem(event: ListEventsItem) {
         val toEventDetailActivity = FinishedEventFragmentDirections.actionNavigationFinishedEventToEventDetailActivity(event.id!!)
         findNavController().navigate(toEventDetailActivity)
-    }
-
-    private fun showDialog(isLoadSuccess: Boolean) {
-        if (!isLoadSuccess) {
-            FailDialogFragment().show(childFragmentManager, "FailDialogFragment")
-        }
     }
 }

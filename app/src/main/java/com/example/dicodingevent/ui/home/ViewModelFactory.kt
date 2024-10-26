@@ -1,4 +1,4 @@
-package com.example.dicodingevent.ui.active_event
+package com.example.dicodingevent.ui.home
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
@@ -10,8 +10,8 @@ class ViewModelFactory private constructor(private val eventRepository: EventRep
     ViewModelProvider.NewInstanceFactory() {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(EventViewModel::class.java)) {
-            return EventViewModel(eventRepository) as T
+        if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
+            return HomeViewModel(eventRepository) as T
         }
 
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)

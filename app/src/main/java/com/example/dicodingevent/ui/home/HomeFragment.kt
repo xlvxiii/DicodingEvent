@@ -4,21 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dicodingevent.R
+import com.example.dicodingevent.data.repositories.Result
 import com.example.dicodingevent.data.response.ListEventsItem
 import com.example.dicodingevent.databinding.FragmentHomeBinding
-import com.example.dicodingevent.ui.FailDialogFragment
-
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
-    private val homeViewModel: HomeViewModel by viewModels<HomeViewModel>()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -40,6 +39,11 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity())
+        val viewModel: HomeViewModel by viewModels {
+            factory
+        }
+
         binding.rvEvent.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
         binding.rvFinishedEvent.layoutManager = LinearLayoutManager(requireActivity())
         binding.rvSearchResult.layoutManager = LinearLayoutManager(requireActivity())
@@ -51,77 +55,93 @@ class HomeFragment : Fragment() {
                 .setOnEditorActionListener { _, _, _ ->
                     searchBar.setText(searchView.text)
 
-                    homeViewModel.fetchSearchResult(searchView.text.toString())
-                    homeViewModel.isLoading3.observe(viewLifecycleOwner) {
-                        showLoading3(it)
+                    viewModel.getSearchResult(searchView.text.toString()).observe(viewLifecycleOwner) { eventList ->
+                        binding.progressBar3.visibility = View.GONE
+                        if (eventList != null) {
+                            when (eventList) {
+                                is Result.Loading -> {
+                                    binding.progressBar3.visibility = View.VISIBLE
+                                }
+                                is Result.Success -> {
+                                    binding.progressBar3.visibility = View.GONE
+                                    setSearchResultData(eventList.data)
+                                    if (eventList.data?.isEmpty() == true) {
+                                        binding.tvTextEmptyResult.text = getString(R.string.empty_search_result)
+                                        binding.tvTextResult.text = ""
+                                    } else {
+                                        binding.tvTextResult.text = getString(R.string.text_result)
+                                        binding.tvTextEmptyResult.text = ""
+                                    }
+                                }
+
+                                is Result.Error -> {
+                                    binding.progressBar3.visibility = View.GONE
+                                    Toast.makeText(
+                                        context,
+                                        "No internet connection",
+                                        Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
                     }
 
-                    //        val layoutManager = LinearLayoutManager(requireActivity())
                     binding.rvSearchResult.addItemDecoration(DividerItemDecoration(requireActivity(), LinearLayoutManager(requireActivity()).orientation))
 
+                    searchBar.setText("")
                     false
                 }
         }
 
-        homeViewModel.listEvent.observe(viewLifecycleOwner) { eventList ->
-            setEventData(eventList)
-        }
-
-        homeViewModel.listFinishedEvent.observe(viewLifecycleOwner) { finishedEventList ->
-            setFinishedEventData(finishedEventList)
-        }
-
-        homeViewModel.searchResult.observe(viewLifecycleOwner) { eventList ->
-            setSearchResultData(eventList)
-            if (eventList?.isEmpty() == true) {
-                binding.tvTextEmptyResult.text = getString(R.string.empty_search_result)
-                binding.tvTextResult.text = ""
-            } else {
-                binding.tvTextResult.text = getString(R.string.text_result)
-                binding.tvTextEmptyResult.text = ""
+        viewModel.getActiveEvents(1, 5).observe(viewLifecycleOwner) { eventList ->
+            binding.progressBar.visibility = View.GONE
+            if (eventList != null) {
+                when (eventList) {
+                    is Result.Loading -> {
+                        binding.progressBar.visibility = View.VISIBLE
+                    }
+                    is Result.Success -> {
+                        binding.progressBar.visibility = View.GONE
+                        setEventData(eventList.data)
+                    }
+                    is Result.Error -> {
+                        binding.progressBar.visibility = View.GONE
+                        Toast.makeText(
+                            context,
+                            "No internet connection",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
             }
         }
 
-        homeViewModel.isLoading.observe(viewLifecycleOwner) {
-            showLoading(it)
-        }
-
-        homeViewModel.isLoading2.observe(viewLifecycleOwner) {
-            showLoading2(it)
-        }
-
-        homeViewModel.isLoadSuccess.observe(viewLifecycleOwner) {
-            isSuccess(it)
+        viewModel.getFinishedEvents(0).observe(viewLifecycleOwner) { eventList ->
+            binding.progressBar2.visibility = View.GONE
+            if (eventList != null) {
+                when (eventList) {
+                    is Result.Loading -> {
+                        binding.progressBar2.visibility = View.VISIBLE
+                    }
+                    is Result.Success -> {
+                        binding.progressBar2.visibility = View.GONE
+                        setFinishedEventData(eventList.data)
+                    }
+                    is Result.Error -> {
+                        binding.progressBar2.visibility = View.GONE
+                        Toast.makeText(
+                            context,
+                            "No internet connection",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun showLoading(isLoading: Boolean) {
-        if (isLoading) {
-            binding.progressBar.visibility = View.VISIBLE
-        } else {
-            binding.progressBar.visibility = View.GONE
-        }
-    }
-
-    private fun showLoading2(isLoading2: Boolean) {
-        if (isLoading2) {
-            binding.progressBar2.visibility = View.VISIBLE
-        } else {
-            binding.progressBar2.visibility = View.GONE
-        }
-    }
-
-    private fun showLoading3(isLoading3: Boolean) {
-        if (isLoading3) {
-            binding.progressBar3.visibility = View.VISIBLE
-        } else {
-            binding.progressBar3.visibility = View.GONE
-        }
     }
 
     private fun setEventData(eventList: List<ListEventsItem?>?) {
@@ -168,12 +188,5 @@ class HomeFragment : Fragment() {
     private fun showSearchEventItem(event: ListEventsItem) {
         val toEventDetailActivity = HomeFragmentDirections.actionNavigationHomeToEventDetailActivity(event.id!!)
         findNavController().navigate(toEventDetailActivity)
-    }
-
-    // show dialog if failed to load data
-    private fun isSuccess(isLoadSuccess: Boolean) {
-        if (!isLoadSuccess) {
-            FailDialogFragment().show(childFragmentManager, "FailDialogFragment")
-        }
     }
 }
