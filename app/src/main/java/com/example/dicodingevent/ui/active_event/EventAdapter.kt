@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.example.dicodingevent.R
 import com.example.dicodingevent.data.response.ListEventsItem
 import com.example.dicodingevent.databinding.ItemEventBinding
 
@@ -31,7 +33,10 @@ class EventAdapter : ListAdapter<ListEventsItem, EventAdapter.MyViewHolder>(DIFF
         fun bind(event: ListEventsItem) {
             binding.tvEventName.text = event.name
             binding.tvSummary.text = event.summary
-            Glide.with(binding.root.context).load(event.mediaCover).into(binding.imgEventPhoto)
+            Glide.with(binding.root.context).load(event.mediaCover)
+                .apply(RequestOptions.placeholderOf(R.drawable.baseline_refresh_24)
+                    .error(R.drawable.baseline_broken_image_24))
+                .into(binding.imgEventPhoto)
         }
     }
 

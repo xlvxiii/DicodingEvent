@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.example.dicodingevent.R
 import com.example.dicodingevent.data.response.ListEventsItem
 import com.example.dicodingevent.databinding.ItemSearchResultBinding
 
@@ -30,7 +32,10 @@ class SearchResultAdapter : ListAdapter<ListEventsItem, SearchResultAdapter.MyVi
     class MyViewHolder(private val binding: ItemSearchResultBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(event: ListEventsItem) {
             binding.tvEventName.text = event.name
-            Glide.with(binding.root.context).load(event.imageLogo).into(binding.imgEventThumbnail)
+            Glide.with(binding.root.context).load(event.imageLogo)
+                .apply(RequestOptions.placeholderOf(R.drawable.baseline_refresh_24)
+                .error(R.drawable.baseline_broken_image_24))
+                .into(binding.imgEventThumbnail)
         }
     }
 

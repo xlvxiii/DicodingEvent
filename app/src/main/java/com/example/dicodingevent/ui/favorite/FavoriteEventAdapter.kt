@@ -21,7 +21,10 @@ class FavoriteEventAdapter(private val onFavoriteClick: (EventEntity) -> Unit) :
         fun bind(event: EventEntity) {
             binding.tvEventName.text = event.name
             binding.tvSummary.text = event.summary
-            Glide.with(itemView.context).load(event.mediaCover).apply(RequestOptions.placeholderOf(R.drawable.baseline_refresh_24).error(R.drawable.baseline_broken_image_24)).into(binding.imgEventPhoto)
+            Glide.with(itemView.context).load(event.mediaCover)
+                .apply(RequestOptions.placeholderOf(R.drawable.baseline_refresh_24)
+                    .error(R.drawable.baseline_broken_image_24))
+                .into(binding.imgEventPhoto)
         }
 
     }

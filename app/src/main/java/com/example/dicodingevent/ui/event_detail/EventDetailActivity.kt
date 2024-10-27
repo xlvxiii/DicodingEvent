@@ -14,6 +14,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.navArgs
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.dicodingevent.R
 import com.example.dicodingevent.data.repositories.Result
 import com.example.dicodingevent.databinding.ActivityEventDetailBinding
@@ -57,6 +58,8 @@ class EventDetailActivity : AppCompatActivity() {
                         binding.progressBar.visibility = View.GONE
 
                         Glide.with(binding.root.context).load(eventDetail.data?.imageLogo)
+                            .apply(RequestOptions.placeholderOf(R.drawable.baseline_refresh_24)
+                                .error(R.drawable.baseline_broken_image_24))
                             .into(binding.imgEventPhoto)
                         binding.tvEventName.text = eventDetail.data?.name
                         binding.tvEventOwner.text = eventDetail.data?.ownerName
