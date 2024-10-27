@@ -86,25 +86,6 @@ class SettingsFragment : Fragment() {
 
     }
 
-    override fun onStart() {
-        super.onStart()
-
-//        val pref = SettingPreferences.getInstance(requireActivity().application.dataStore)
-//        val settingsViewModel = ViewModelProvider(
-//            this,
-//            ViewModelFactory(pref)
-//        )[SettingsViewModel::class.java]
-//
-//        prefWorkState = settingsViewModel.getReminderStatus().toString()
-//        settingsViewModel.getReminderStatus().observe(viewLifecycleOwner) { status: Set<String> ->
-//            prefWorkState = try {
-//                status.first()
-//            } catch (e: Exception) {
-//                "empty"
-//            }
-//        }
-    }
-
     private fun setReminder(isChecked: Boolean, settingsViewModel: SettingsViewModel) {
 
         if (isChecked) {

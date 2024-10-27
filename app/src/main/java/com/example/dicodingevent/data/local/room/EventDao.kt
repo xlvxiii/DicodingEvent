@@ -22,9 +22,6 @@ interface EventDao {
     @Update
     suspend fun updateEvent(event: EventEntity)
 
-//    @Query("DELETE FROM event WHERE isFavorite = 0")
-//    suspend fun deleteAll()
-
     @Query("SELECT EXISTS(SELECT * FROM event WHERE id = :id)")
     suspend fun isEventFavorite(id: Int): Boolean
 
@@ -32,12 +29,6 @@ interface EventDao {
     @Query("SELECT EXISTS(SELECT * FROM event WHERE id = :id)")
     fun isExist(id: Int): LiveData<Boolean>
 
-//    @Query("SELECT * FROM event where id = :id")
-//    fun getEventById(id: Int): LiveData<EventEntity>
-
     @Query("DELETE FROM event WHERE id = :id")
     suspend fun deleteEventById(id: Int)
-
-//    @Query("UPDATE event SET isFavorite = :isFavorite WHERE id = :id")
-//    fun updateEventById(id: Int, isFavorite: Boolean)
 }

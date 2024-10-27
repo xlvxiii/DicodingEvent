@@ -1,9 +1,7 @@
 package com.example.dicodingevent.utilities
 
-import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.os.Build
 import android.os.Looper
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -20,7 +18,6 @@ class ReminderWorkManager(context: Context, workerParams: WorkerParameters) : Wo
     private var resultStatus: Result? = null
 
     override fun doWork(): Result {
-//        val dataEvent = inputData.getString(EXTRA_EVENT)
         return getUpcomingEvent()
     }
 
@@ -78,11 +75,6 @@ class ReminderWorkManager(context: Context, workerParams: WorkerParameters) : Wo
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH)
-//            notification.setChannelId(CHANNEL_ID)
-//            notificationManager.createNotificationChannel(channel)
-//        }
         notificationManager.notify(NOTIFICATION_ID, notification.build())
     }
 
@@ -91,6 +83,5 @@ class ReminderWorkManager(context: Context, workerParams: WorkerParameters) : Wo
         const val EXTRA_EVENT = "event"
         const val NOTIFICATION_ID = 1
         const val CHANNEL_ID = "channel_01"
-        const val CHANNEL_NAME = "dicoding event channel"
     }
 }

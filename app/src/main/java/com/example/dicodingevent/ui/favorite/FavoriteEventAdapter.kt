@@ -77,5 +77,4 @@ class FavoriteEventAdapter(private val onFavoriteClick: (EventEntity) -> Unit) :
                 }
             }
     }
-
 }

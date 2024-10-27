@@ -28,8 +28,6 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-//        hide action bar
-//        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 

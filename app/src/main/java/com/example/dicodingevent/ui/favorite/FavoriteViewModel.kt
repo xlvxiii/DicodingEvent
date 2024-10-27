@@ -6,7 +6,6 @@ import com.example.dicodingevent.data.repositories.EventRepository
 import kotlinx.coroutines.launch
 
 class FavoriteViewModel(private val eventRepository: EventRepository) : ViewModel() {
-//    fun getEvents(active: Int) = eventRepository.getEvents(active)
     fun getFavoriteEvents() = eventRepository.getFavoritesEvents()
 
     fun deleteFavoriteEvent(eventId: Int) {

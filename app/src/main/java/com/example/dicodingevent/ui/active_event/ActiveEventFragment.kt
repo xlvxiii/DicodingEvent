@@ -52,7 +52,6 @@ class ActiveEventFragment : Fragment() {
                     }
                     is Result.Error -> {
                         binding.progressBar.visibility = View.GONE
-//                        FailDialogFragment().show(childFragmentManager, "FailDialogFragment")
                         Toast.makeText(context, "No internet connection", Toast.LENGTH_SHORT)
                             .show()
                     }

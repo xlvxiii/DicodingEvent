@@ -10,7 +10,6 @@ import com.example.dicodingevent.data.local.room.EventDao
 import com.example.dicodingevent.data.response.EventDetailItem
 import com.example.dicodingevent.data.response.ListEventsItem
 import com.example.dicodingevent.data.retrofit.ApiService
-import com.example.dicodingevent.utilities.AppExecutors
 
 class EventRepository private constructor(
     private val apiService: ApiService,
@@ -32,9 +31,7 @@ class EventRepository private constructor(
     fun getEvents(active: Int, limit: Int?): LiveData<Result<List<ListEventsItem?>?>> = liveData {
         emit(Result.Loading)
         try {
-//            val _listEvents = MutableLiveData<List<ListEventsItem?>?>()
             val response = apiService.suspendedGetEvents(active, limit)
-//            val listEvents: LiveData<Result<List<ListEventsItem?>?>> = _listEvents.map { Result.Success(it) }
             if (active == 1) {
                 _listEvents.value = response.listEvents
             } else {
@@ -59,35 +56,14 @@ class EventRepository private constructor(
         emitSource(searchResult)
     }
 
-//    fun getFinishedEvents(active: Int): LiveData<Result<List<ListEventsItem?>?>> = liveData {
-//        emit(Result.Loading)
-//        try {
-//            val _listFinishedEvents = MutableLiveData<List<ListEventsItem?>?>()
-//            val response = apiService.suspendedGetEvents(active)
-//            val listFinishedEvents: LiveData<Result<List<ListEventsItem?>?>> = _listFinishedEvents.map { Result.Success(it) }
-//            _listFinishedEvents.value = response.listEvents
-//            emitSource(listFinishedEvents)
-//        } catch (e: Exception) {
-//            Log.d("EventRepository", "getEvents: ${e.message.toString()} ")
-//            emit(Result.Error(e.message.toString()))
-//        }
-//    }
-
     fun getFavoritesEvents(): LiveData<List<EventEntity>> {
         return eventDao.getFavoriteEvents()
     }
 
-//    suspend fun setFavoriteEvent(event: EventEntity, favoriteState: Boolean) {
-//        event.isFavorite = favoriteState
-//        eventDao.updateEvent(event)
-//    }
-
     fun fetchEventDetail(eventId: Int): LiveData<Result<EventDetailItem?>> = liveData {
         emit(Result.Loading)
         try {
-//            val _events = MutableLiveData<EventDetailItem?>()
             val response = apiService.getEventDetail(eventId)
-//            events = _events.map { Result.Success(it) }
             _eventDetail.value = response.event
         } catch (e: Exception) {
             Log.d("EventRepository", "getEventDetail: ${e.message.toString()} ")
@@ -95,31 +71,6 @@ class EventRepository private constructor(
         }
         emitSource(eventDetail)
     }
-
-    //    fun fetchEventDetail(eventId: Int) {
-//        _isLoading.value = true
-//        val client = ApiConfig.getApiService().getEventDetail(eventId)
-//
-//        client.enqueue(object: Callback<EventDetailResponse> {
-//            override fun onResponse(
-//                call: Call<EventDetailResponse>,
-//                response: Response<EventDetailResponse>
-//            ) {
-//                _isLoading.value = false
-//                if (response.isSuccessful) {
-//                    _eventDetail.value = response.body()?.event
-//                } else {
-//                    Log.e(TAG, "onFailure: ${response.message()}")
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<EventDetailResponse>, t: Throwable) {
-//                _isLoading.value = false
-//                _isLoadSuccess.value = false
-//                Log.e(TAG, "onFailure: ${t.message}")
-//            }
-//        })
-//    }
 
     suspend fun saveFavoriteEvent(eventDetail: EventDetailItem?) {
         try {
@@ -152,7 +103,6 @@ class EventRepository private constructor(
         fun getInstance(
             apiService: ApiService,
             eventDao: EventDao,
-            appExecutors: AppExecutors
         ): EventRepository =
             instance ?: synchronized(this) {
                 instance ?: EventRepository(apiService, eventDao)
