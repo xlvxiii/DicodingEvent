@@ -17,4 +17,28 @@ class SettingsViewModel(private val pref: SettingPreferences) : ViewModel() {
             pref.saveThemeSetting(isDarkModeActive)
         }
     }
+
+    fun getReminderSettings(): LiveData<Boolean> {
+        return pref.getReminderSetting().asLiveData()
+    }
+
+    fun getReminderStatus(): LiveData<Set<String>> {
+        return pref.getReminderStatus().asLiveData()
+    }
+
+    fun getWorkId(): LiveData<Set<String>> {
+        return pref.getWorkId().asLiveData()
+    }
+
+    fun saveReminderSetting(isReminderActive: Boolean) {
+        viewModelScope.launch {
+            pref.saveReminderSetting(isReminderActive)
+        }
+    }
+
+    fun saveReminderStatus(workState: String, workId: String) {
+        viewModelScope.launch {
+            pref.saveReminderStatus(workState, workId)
+        }
+    }
 }

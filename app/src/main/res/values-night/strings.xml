@@ -18,4 +18,5 @@
     <string name="dark_mode">Darkmode</string>
     <string name="title_favorite">Favorite</string>
     <string name="save_favorite">Save favorite</string>
+    <string name="daily_reminder">Daily Reminder</string>
 </resources>

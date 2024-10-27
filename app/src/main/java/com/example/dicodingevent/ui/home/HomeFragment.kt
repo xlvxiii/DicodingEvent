@@ -123,8 +123,8 @@ class HomeFragment : Fragment() {
                         binding.progressBar2.visibility = View.VISIBLE
                     }
                     is Result.Success -> {
-                        binding.progressBar2.visibility = View.GONE
                         setFinishedEventData(eventList.data)
+                        binding.progressBar2.visibility = View.GONE
                     }
                     is Result.Error -> {
                         binding.progressBar2.visibility = View.GONE
