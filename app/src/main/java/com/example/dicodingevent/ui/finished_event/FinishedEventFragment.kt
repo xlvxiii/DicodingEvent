@@ -44,8 +44,8 @@ class FinishedEventFragment : Fragment() {
                 when (finishedEventList) {
                     Result.Loading -> binding.progressBar.visibility = View.VISIBLE
                     is Result.Success -> {
-                        binding.progressBar.visibility = View.GONE
                         setFinishedEventData(finishedEventList.data)
+                        binding.progressBar.visibility = View.GONE
                     }
                     is Result.Error -> {
                         binding.progressBar.visibility = View.GONE

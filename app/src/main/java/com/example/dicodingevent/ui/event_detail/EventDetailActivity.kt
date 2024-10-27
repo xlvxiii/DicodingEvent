@@ -55,8 +55,6 @@ class EventDetailActivity : AppCompatActivity() {
                     }
 
                     is Result.Success -> {
-                        binding.progressBar.visibility = View.GONE
-
                         Glide.with(binding.root.context).load(eventDetail.data?.imageLogo)
                             .apply(RequestOptions.placeholderOf(R.drawable.baseline_refresh_24)
                                 .error(R.drawable.baseline_broken_image_24))
@@ -104,6 +102,8 @@ class EventDetailActivity : AppCompatActivity() {
                                 }
                             }
                         }
+
+                        binding.progressBar.visibility = View.GONE
                     }
 
                     is Result.Error -> {

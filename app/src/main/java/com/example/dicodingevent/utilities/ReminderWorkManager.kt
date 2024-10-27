@@ -1,5 +1,6 @@
 package com.example.dicodingevent.utilities
 
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Looper
@@ -39,6 +40,7 @@ class ReminderWorkManager(context: Context, workerParams: WorkerParameters) : Wo
                     val responseObject = JSONObject(result)
                     val upcomingEvent = responseObject.getJSONArray("listEvents").getJSONObject(0).getString("name")
                     val date = responseObject.getJSONArray("listEvents").getJSONObject(0).getString("beginTime")
+
                     val title = "Upcoming event $upcomingEvent"
                     val message = "Start on $date"
                     showNotification(title, message)
@@ -75,6 +77,9 @@ class ReminderWorkManager(context: Context, workerParams: WorkerParameters) : Wo
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
 
+        val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH)
+        notification.setChannelId(CHANNEL_ID)
+        notificationManager.createNotificationChannel(channel)
         notificationManager.notify(NOTIFICATION_ID, notification.build())
     }
 
@@ -83,5 +88,7 @@ class ReminderWorkManager(context: Context, workerParams: WorkerParameters) : Wo
         const val EXTRA_EVENT = "event"
         const val NOTIFICATION_ID = 1
         const val CHANNEL_ID = "channel_01"
+        const val CHANNEL_NAME = "dicoding event channel"
+
     }
 }

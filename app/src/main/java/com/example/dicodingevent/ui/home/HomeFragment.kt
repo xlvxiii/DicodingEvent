@@ -1,6 +1,7 @@
 package com.example.dicodingevent.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -54,15 +55,15 @@ class HomeFragment : Fragment() {
                     searchBar.setText(searchView.text)
 
                     viewModel.getSearchResult(searchView.text.toString()).observe(viewLifecycleOwner) { eventList ->
-                        binding.progressBar3.visibility = View.GONE
+                        binding.searchProgressBar.visibility = View.GONE
                         if (eventList != null) {
                             when (eventList) {
                                 is Result.Loading -> {
-                                    binding.progressBar3.visibility = View.VISIBLE
+                                    binding.searchProgressBar.visibility = View.VISIBLE
                                 }
                                 is Result.Success -> {
-                                    binding.progressBar3.visibility = View.GONE
                                     setSearchResultData(eventList.data)
+                                    binding.searchProgressBar.visibility = View.GONE
                                     if (eventList.data?.isEmpty() == true) {
                                         binding.tvTextEmptyResult.text = getString(R.string.empty_search_result)
                                         binding.tvTextResult.text = ""
@@ -73,7 +74,8 @@ class HomeFragment : Fragment() {
                                 }
 
                                 is Result.Error -> {
-                                    binding.progressBar3.visibility = View.GONE
+                                    binding.searchProgressBar.visibility = View.GONE
+                                    Log.d("HomeFragment", "onViewCreated: ${eventList.error}")
                                     Toast.makeText(
                                         context,
                                         "No internet connection",
@@ -98,8 +100,8 @@ class HomeFragment : Fragment() {
                         binding.progressBar.visibility = View.VISIBLE
                     }
                     is Result.Success -> {
-                        binding.progressBar.visibility = View.GONE
                         setEventData(eventList.data)
+                        binding.progressBar.visibility = View.GONE
                     }
                     is Result.Error -> {
                         binding.progressBar.visibility = View.GONE

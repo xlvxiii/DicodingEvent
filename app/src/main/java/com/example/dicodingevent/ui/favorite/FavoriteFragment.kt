@@ -39,8 +39,8 @@ class FavoriteFragment : Fragment() {
         }
 
         viewModel.getFavoriteEvents().observe(viewLifecycleOwner) { favoriteEvents ->
-            binding?.progressBar?.visibility = View.GONE
             eventAdapter.submitList(favoriteEvents)
+            binding?.progressBar?.visibility = View.GONE
         }
 
         binding?.rvFavoriteEvent?.apply {
