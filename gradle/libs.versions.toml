@@ -1,6 +1,7 @@
 [versions]
 activityKtx = "1.9.3"
 agp = "8.6.1"
+#noinspection GradleDependency
 androidAsyncHttp = "1.4.10"
 datastorePreferences = "1.1.1"
 glide = "4.16.0"
@@ -15,7 +16,9 @@ kotlinxCoroutinesCore = "1.7.3"
 loggingInterceptor = "4.11.0"
 material = "1.12.0"
 constraintlayout = "2.1.4"
+#noinspection GradleDependency
 lifecycleLivedataKtx = "2.6.2"
+#noinspection GradleDependency
 lifecycleViewmodelKtx = "2.6.2"
 navigationFragmentKtx = "2.8.3"
 navigationSafeArgsGradlePlugin = "2.8.3"
@@ -23,9 +26,13 @@ navigationUiKtx = "2.8.3"
 activity = "1.9.3"
 retrofit = "2.9.0"
 preference = "1.2.1"
+#noinspection GradleDependency
 roomCompiler = "2.5.0"
+#noinspection GradleDependency
 roomRuntime = "2.5.2"
+#noinspection GradleDependency
 roomKtx = "2.5.2"
+#noinspection GradleDependency
 workRuntime = "2.8.1"
 
 [libraries]

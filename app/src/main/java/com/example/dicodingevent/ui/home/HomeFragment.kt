@@ -96,15 +96,11 @@ class HomeFragment : Fragment() {
             binding.progressBar.visibility = View.GONE
             if (eventList != null) {
                 when (eventList) {
-                    is Result.Loading -> {
-                        binding.progressBar.visibility = View.VISIBLE
-                    }
+                    is Result.Loading -> {}
                     is Result.Success -> {
                         setEventData(eventList.data)
-                        binding.progressBar.visibility = View.GONE
                     }
                     is Result.Error -> {
-                        binding.progressBar.visibility = View.GONE
                         Toast.makeText(
                             context,
                             "No internet connection",

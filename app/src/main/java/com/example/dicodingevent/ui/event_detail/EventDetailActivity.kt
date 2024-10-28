@@ -55,6 +55,13 @@ class EventDetailActivity : AppCompatActivity() {
                     }
 
                     is Result.Success -> {
+
+                        val quotaLeft = try {
+                            eventDetail.data?.quota?.minus(eventDetail.data.registrants!!)
+                        } catch (e: NullPointerException) {
+                            0
+                        }
+
                         Glide.with(binding.root.context).load(eventDetail.data?.imageLogo)
                             .apply(RequestOptions.placeholderOf(R.drawable.baseline_refresh_24)
                                 .error(R.drawable.baseline_broken_image_24))
@@ -62,7 +69,7 @@ class EventDetailActivity : AppCompatActivity() {
                         binding.tvEventName.text = eventDetail.data?.name
                         binding.tvEventOwner.text = eventDetail.data?.ownerName
                         binding.tvEventDate.text = eventDetail.data?.beginTime
-                        binding.tvEventQuota.text = eventDetail.data?.quota.toString()
+                        binding.tvEventQuota.text = quotaLeft.toString()
                         binding.tvDesc.text = HtmlCompat.fromHtml(
                             eventDetail.data?.description.toString(),
                             HtmlCompat.FROM_HTML_MODE_LEGACY
